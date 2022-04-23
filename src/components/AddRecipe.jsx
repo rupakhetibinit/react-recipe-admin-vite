@@ -5,16 +5,25 @@ import {
 	FormErrorMessage,
 	FormLabel,
 	Heading,
+	Image,
 	Input,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
+import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 
 const AddRecipe = () => {
+	const { user } = useContext(AuthContext);
+	const [file, setFile] = useState(null);
+	const [showing, setShowing] = useState(false);
+	const [imageUrl, setImageUrl] = useState('');
+
 	const {
 		register,
 		control,
 		handleSubmit,
+		reset,
 		formState: { errors, isSubmitting },
 	} = useForm({
 		defaultValues: {
@@ -25,7 +34,7 @@ const AddRecipe = () => {
 			imageUrl: '',
 		},
 	});
-	const { fields, insert, remove, append } = useFieldArray({
+	const { fields, remove, append } = useFieldArray({
 		name: 'steps',
 		control,
 	});
@@ -34,9 +43,71 @@ const AddRecipe = () => {
 		append: ingredientAppend,
 		remove: ingredientRemove,
 	} = useFieldArray({ name: 'ingredients', control });
+
 	const onSubmit = (values) => {
-		console.log(values);
+		console.log(values, imageUrl);
+		axios
+			.post(
+				'https://recipetohome-api.herokuapp.com/api/v1/recipes',
+				{ values, imageUrl },
+				{
+					headers: {
+						Authorization: `Bearer ${user.token}`,
+						'Content-Type': 'application/json',
+					},
+				}
+			)
+			.then((res) => {
+				console.log(res);
+				if (res.statusText === 'OK') {
+					console.log('success');
+					reset();
+				} else {
+					console.log('failed');
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
+
+	const handleChange = (e) => {
+		if (!e.target.files || e.target.files.length === 0) {
+			setFile(undefined);
+			return;
+		}
+		setFile(e.target.files[0]);
+	};
+
+	const handleUpload = () => {
+		if (file) {
+			const formData = new FormData();
+			formData.append('recipe-file', file);
+
+			axios
+				.post(
+					'https://recipetohome-api.herokuapp.com/image-upload-single',
+					formData,
+					{
+						headers: {
+							'Content-Type': 'multipart/form-data',
+						},
+					}
+				)
+				.then((res) => {
+					console.log(res);
+					if (res.statusText === 'OK') {
+						setImageUrl(res.data.path);
+					} else {
+						console.log('failed');
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		}
+	};
+
 	return (
 		<Flex>
 			<Heading>Add Recipe</Heading>
@@ -82,6 +153,20 @@ const AddRecipe = () => {
 					))}
 					<Button onClick={() => ingredientAppend({ name: '', price: '' })}>
 						+
+					</Button>
+
+					<Input
+						type='file'
+						accept='jpg, .jpeg, .png'
+						onChange={handleChange}
+					/>
+
+					{imageUrl && (
+						<Image width={300} heigh={300} src={imageUrl} alt='Preview' />
+					)}
+
+					<Button onClick={handleUpload} disabled={showing}>
+						{imageUrl ? 'Uploaded' : 'Upload'}
 					</Button>
 
 					<Button
