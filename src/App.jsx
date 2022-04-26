@@ -2,7 +2,8 @@ import React, { Suspense, useContext, useEffect } from 'react';
 import { ChakraProvider, Spinner, theme } from '@chakra-ui/react';
 import { AuthContext } from './context/AuthContext';
 import Login from './components/Login';
-const MainPage = React.lazy(() => import('./components/MainPage'));
+import ReactLazyPreload from './ReactLazyPreload';
+const MainPage = ReactLazyPreload(() => import('./components/MainPage'));
 function App() {
 	const { user, setUser } = useContext(AuthContext);
 	useEffect(() => {

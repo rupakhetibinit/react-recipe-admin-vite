@@ -1,8 +1,9 @@
 import { Flex, Spinner } from '@chakra-ui/react';
 import React, { Suspense, useState } from 'react';
-const AddRecipe = React.lazy(() => import('./AddRecipe'));
+import ReactLazyPreload from '../ReactLazyPreload';
+const AddRecipe = ReactLazyPreload(() => import('./AddRecipe'));
 import ShowOrders from './ShowOrders';
-const ShowUsers = React.lazy(() => import('./ShowUsers'));
+const ShowUsers = ReactLazyPreload(() => import('./ShowUsers'));
 import SideBar from './SideBar';
 
 const MainPage = () => {
