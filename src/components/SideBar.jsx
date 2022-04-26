@@ -33,7 +33,6 @@ const SideBar = ({ selectedTab, setSelectedTab }) => {
 			background='gray.100'>
 			<Flex
 				padding='5%'
-				v
 				flexDirection='column'
 				alignItems={navSize === 'small' ? 'center' : 'flex-start'}
 				as='nav'>
@@ -72,6 +71,7 @@ const SideBar = ({ selectedTab, setSelectedTab }) => {
 				alignItems={navSize === 'small' ? 'center' : 'flex-start'}>
 				<div>
 					<Button
+						size={navSize === 'small' ? 'small' : 'medium'}
 						onClick={() => {
 							setUser({
 								isAdmin: false,
