@@ -28,10 +28,10 @@ const AddRecipe = () => {
 	} = useForm({
 		defaultValues: {
 			name: '',
+			servings: 0,
 			steps: [' '],
-			ingredients: [{ name: '', price: '' }],
+			ingredients: [{ name: '', price: 0 }],
 			description: '',
-			imageUrl: '',
 		},
 	});
 	const { fields, remove, append } = useFieldArray({
@@ -49,7 +49,7 @@ const AddRecipe = () => {
 		axios
 			.post(
 				'https://recipetohome-api.herokuapp.com/api/v1/recipes',
-				{ values, imageUrl },
+				{ ...values, imageUrl },
 				{
 					headers: {
 						Authorization: `Bearer ${user.token}`,
@@ -96,11 +96,8 @@ const AddRecipe = () => {
 				)
 				.then((res) => {
 					console.log(res);
-					if (res.statusText === 'OK') {
-						setImageUrl(res.data.path);
-					} else {
-						console.log('failed');
-					}
+
+					setImageUrl(res?.data?.path);
 				})
 				.catch((err) => {
 					console.log(err);
@@ -126,6 +123,16 @@ const AddRecipe = () => {
 						{...register('description', { required: 'This is required' })}
 					/>
 					<FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
+					<FormLabel htmlFor='servings'>Servings</FormLabel>
+					<Input
+						id='servings'
+						placeholder='Servings'
+						type='number'
+						{...register('servings', {
+							required: 'This is required',
+							setValueAs: (v) => parseInt(v),
+						})}
+					/>
 					<FormLabel htmlFor='steps'>Recipe steps</FormLabel>
 					{fields.map((item, index) => (
 						<div key={item.id}>
@@ -145,8 +152,11 @@ const AddRecipe = () => {
 								{...register(`ingredients[${index}].name`)}
 							/>
 							<Input
+								type='number'
 								placeholder={`ingredient ${index + 1} price`}
-								{...register(`ingredients[${index}].price`)}
+								{...register(`ingredients[${index}].price`, {
+									setValueAs: (v) => parseInt(v),
+								})}
 							/>
 							<Button onClick={() => ingredientRemove(index)}>-</Button>
 						</div>
