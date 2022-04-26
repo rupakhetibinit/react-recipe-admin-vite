@@ -1,4 +1,4 @@
-import { Flex, Spinner } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import React, { Suspense, useState } from 'react';
 import ReactLazyPreload from '../ReactLazyPreload';
 const AddRecipe = ReactLazyPreload(() => import('./AddRecipe'));
@@ -11,13 +11,22 @@ const MainPage = () => {
 
 	return (
 		<Flex flexDirection='row'>
+			{/* <div style={{ display: 'flex', flexDirection: 'row' }}> */}
 			<SideBar selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
 			<Flex alignItems='center' justifyContent='center' marginLeft={20}>
-				<Suspense fallback={<Spinner />}>
+				{/* <div
+				className={{
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+					marginLeft: '40px',
+				}}> */}
+				<Suspense fallback={<p>Loading...</p>}>
 					{selectedTab === 'Orders' && <ShowOrders />}
 					{selectedTab === 'Add Recipe' && <AddRecipe />}
 					{selectedTab === 'Users' && <ShowUsers />}
 				</Suspense>
+				{/* </div> */}
 			</Flex>
 		</Flex>
 	);
