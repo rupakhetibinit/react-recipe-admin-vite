@@ -1,11 +1,23 @@
-import { Button, Center, Heading, Image, Stack, Text } from '@chakra-ui/react';
-import { AtSignIcon, LockIcon } from '@chakra-ui/icons';
-import { Form, Formik } from 'formik';
+import {
+	Button,
+	Center,
+	FormControl,
+	Heading,
+	Icon,
+	Image,
+	Input,
+	InputGroup,
+	InputLeftAddon,
+	Stack,
+	Text,
+} from '@chakra-ui/react';
+import { FiAtSign, FiLock } from 'react-icons/fi';
 import React, { useContext } from 'react';
-import InputField from './InputField';
-import { object, string } from 'yup';
 import axios from 'axios';
+import { object, string } from 'yup';
 import { AuthContext } from '../context/AuthContext';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 const schema = object().shape({
 	email: string()
 		.email('Invalid Email')
@@ -15,7 +27,45 @@ const schema = object().shape({
 
 const Login = () => {
 	const { user, setUser } = useContext(AuthContext);
+	const {
+		register,
+		control,
+		handleSubmit,
+		formState: { errors, isSubmitting },
+	} = useForm({
+		defaultValues: {
+			email: '',
+			password: '',
+		},
+		resolver: yupResolver(schema),
+	});
 
+	const onSubmit = (values) => {
+		axios
+			.post('https://recipetohome-api.herokuapp.com/api/auth/login', {
+				email: values.email,
+				password: values.password,
+			})
+			.then((res) => {
+				setUser({
+					...user,
+					email: res.data.email,
+					token: res.data.accessToken,
+					name: res.data.name,
+					isAdmin: res.data.isAdmin,
+				});
+				localStorage.setItem(
+					'user',
+					JSON.stringify({
+						email: res.data.email,
+						token: res.data.accessToken,
+						name: res.data.name,
+						isAdmin: res.data.isAdmin,
+					})
+				);
+			})
+			.catch((err) => console.error(err));
+	};
 	return (
 		<Center h='100vh' bg='purple.200'>
 			<Stack boxShadow='md' bg='whiteAlpha.900' p='20' rounded='md'>
@@ -25,73 +75,52 @@ const Login = () => {
 					Please login using email and password
 				</Text>
 
-				<Formik
-					onSubmit={(values, { setSubmitting }) => {
-						setSubmitting(true);
-						axios
-							.post('https://recipetohome-api.herokuapp.com/api/auth/login', {
-								email: values.email,
-								password: values.password,
-							})
-							.then((res) => {
-								console.log(res.data);
-
-								setUser({
-									...user,
-									email: res.data.email,
-									token: res.data.accessToken,
-									name: res.data.name,
-									isAdmin: res.data.isAdmin,
-								});
-								localStorage.setItem(
-									'user',
-									JSON.stringify({
-										email: res.data.email,
-										token: res.data.accessToken,
-										name: res.data.name,
-										isAdmin: res.data.isAdmin,
-									})
-								);
-							})
-							.catch((err) => console.error(err))
-							.finally(() => setSubmitting(false));
-					}}
-					initialValues={{ email: '', password: '' }}
-					validationSchema={schema}>
-					{({ isSubmitting }) => (
-						<Form>
-							<Stack my='4' spacing='6'>
-								Field
-								<InputField
-									name='email'
+				<form onSubmit={handleSubmit(onSubmit)}>
+					<FormControl control={control}>
+						<Stack pb={5}>
+							<InputGroup>
+								<InputLeftAddon
+									bg='purple.50'
+									children={<Icon as={FiAtSign} />}
+								/>
+								<Input
+									focusBorderColor='purple.500'
+									id='email'
 									type='email'
-									label='Email'
-									leftAddon={<AtSignIcon color='purple.500' />}
+									placeholder='Email'
+									{...register('email', { required: 'This is required' })}
 								/>
-								<InputField
-									name='password'
+							</InputGroup>
+							<p>{errors?.email?.message}</p>
+						</Stack>
+						<Stack pb={5}>
+							<InputGroup>
+								<InputLeftAddon
+									bg='purple.50'
+									children={<Icon as={FiLock} />}
+								/>
+								<Input
+									focusBorderColor='purple.500'
+									id='password'
+									placeholder='Password'
 									type='password'
-									label='Password'
-									leftAddon={<LockIcon color='purple.500' />}
+									minLength={6}
+									{...register('password', { required: 'This is required' })}
 								/>
-								<Button
-									isLoading={isSubmitting}
-									loadingText='Waiting for response'
-									size='lg'
-									colorScheme='purple'
-									type='submit'>
-									Log In
-								</Button>
-							</Stack>
-						</Form>
-					)}
-				</Formik>
+							</InputGroup>
+							<p>{errors?.password?.message}</p>
+						</Stack>
 
-				<Stack justify='center' color='gray.600' spacing='3'>
-					<Text as='div' textAlign='center'>
-						<span></span>
-					</Text>
-				</Stack>
+						<Button
+							isLoading={isSubmitting}
+							loadingText='Waiting for response'
+							size='lg'
+							colorScheme='purple'
+							type='submit'>
+							Log In
+						</Button>
+					</FormControl>
+				</form>
 			</Stack>
 		</Center>
 	);

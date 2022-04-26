@@ -12,6 +12,7 @@
 		"@chakra-ui/react": "^1.8.8",
 		"@emotion/react": "^11.9.0",
 		"@emotion/styled": "^11.8.1",
+		"@hookform/resolvers": "^2.8.8",
 		"axios": "^0.26.1",
 		"formik": "^2.2.9",
 		"framer-motion": "^4.1.17",
@@ -20,7 +21,8 @@
 		"react-hook-form": "^7.30.0",
 		"react-icons": "^3.11.0",
 		"react-query": "^3.35.0",
-		"yup": "^0.32.11"
+		"yup": "^0.32.11",
+		"zod": "^3.14.4"
 	},
 	"devDependencies": {
 		"@types/react": "^18.0.0",
