@@ -84,8 +84,7 @@ const ShowOrders = () => {
 				<Thead>
 					<Tr>
 						<Th>S.N.</Th>
-						<Th>Order Id ID</Th>
-						<Th>Order Delivered</Th>
+						<Th>Order ID</Th>
 						<Th>Order Date</Th>
 						<Th isNumeric>Order Total</Th>
 						<Th>Order By</Th>
@@ -99,7 +98,6 @@ const ShowOrders = () => {
 							<Tr key={order.id}>
 								<Td>{index + 1}</Td>
 								<Td>{order.id.split('-')[0].toUpperCase()}</Td>
-								<Td>{order.delivered ? 'true' : 'false'}</Td>
 								<Td>{generateDateTime(order.createdAt)}</Td>
 								<Td>{order.total}</Td>
 								<Td>{order.user.name}</Td>
