@@ -1,5 +1,6 @@
 import { Flex } from '@chakra-ui/react';
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import ReactLazyPreload from '../ReactLazyPreload';
 const AddRecipe = ReactLazyPreload(() => import('./AddRecipe'));
 import ShowOrders from './ShowOrders';
@@ -8,6 +9,7 @@ import SideBar from './SideBar';
 
 const MainPage = () => {
 	const [selectedTab, setSelectedTab] = useState('Orders');
+	const { user } = useContext(AuthContext);
 
 	return (
 		<Flex flexDirection='row'>
@@ -21,11 +23,15 @@ const MainPage = () => {
 					justifyContent: 'center',
 					marginLeft: '40px',
 				}}> */}
-				<Suspense fallback={<p>Loading...</p>}>
-					{selectedTab === 'Orders' && <ShowOrders />}
-					{selectedTab === 'Add Recipe' && <AddRecipe />}
-					{selectedTab === 'Users' && <ShowUsers />}
-				</Suspense>
+				{!user.isAdmin ? (
+					<h1>Admin Access only</h1>
+				) : (
+					<Suspense fallback={<p>Loading...</p>}>
+						{selectedTab === 'Orders' && <ShowOrders />}
+						{selectedTab === 'Add Recipe' && <AddRecipe />}
+						{selectedTab === 'Users' && <ShowUsers />}
+					</Suspense>
+				)}
 				{/* </div> */}
 			</Flex>
 		</Flex>
