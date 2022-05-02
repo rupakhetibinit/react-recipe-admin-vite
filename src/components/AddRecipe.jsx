@@ -28,9 +28,9 @@ const AddRecipe = () => {
 	} = useForm({
 		defaultValues: {
 			name: '',
-			servings: 0,
+			servings: null,
 			steps: [' '],
-			ingredients: [{ name: '', price: 0 }],
+			ingredients: [{ name: '', price: null }],
 			description: '',
 		},
 	});
@@ -106,7 +106,7 @@ const AddRecipe = () => {
 	};
 
 	return (
-		<Flex>
+		<Flex flexDirection='column' alignItems='center'>
 			<Heading>Add Recipe</Heading>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<FormControl control={control}>
@@ -137,32 +137,41 @@ const AddRecipe = () => {
 					{fields.map((item, index) => (
 						<div key={item.id}>
 							<Input
+								marginBottom={2}
 								placeholder={`step ${index + 1}`}
 								{...register(`steps[${index}]`)}
 							/>
-							<Button onClick={() => remove(index)}>-</Button>
+							<Button marginBottom={2} onClick={() => remove(index)}>
+								Remove Step
+							</Button>
 						</div>
 					))}
-					<Button onClick={() => append('')}>+</Button>
+					<Button onClick={() => append('')}>Add Step</Button>
 					<FormLabel htmlFor='ingredients'>Ingredients</FormLabel>
 					{ingredients.map((item, index) => (
 						<div key={item.id}>
 							<Input
+								marginBottom={2}
 								placeholder={`ingredient ${index + 1} name`}
 								{...register(`ingredients[${index}].name`)}
 							/>
 							<Input
+								marginBottom={2}
 								type='number'
 								placeholder={`ingredient ${index + 1} price`}
 								{...register(`ingredients[${index}].price`, {
 									setValueAs: (v) => parseInt(v),
 								})}
 							/>
-							<Button onClick={() => ingredientRemove(index)}>-</Button>
+							<Button marginBottom={2} onClick={() => ingredientRemove(index)}>
+								Remove Ingredient
+							</Button>
 						</div>
 					))}
-					<Button onClick={() => ingredientAppend({ name: '', price: '' })}>
-						+
+					<Button
+						marginBottom={2}
+						onClick={() => ingredientAppend({ name: '', price: '' })}>
+						Add Ingredient
 					</Button>
 
 					<Input
@@ -174,18 +183,19 @@ const AddRecipe = () => {
 					{imageUrl && (
 						<Image width={300} heigh={300} src={imageUrl} alt='Preview' />
 					)}
+					<div
+						style={{
+							display: 'flex',
+							marginTop: 8,
+						}}>
+						<Button marginRight={6} onClick={handleUpload} disabled={showing}>
+							{imageUrl ? 'Uploaded' : 'Upload'}
+						</Button>
 
-					<Button onClick={handleUpload} disabled={showing}>
-						{imageUrl ? 'Uploaded' : 'Upload'}
-					</Button>
-
-					<Button
-						mt={4}
-						colorScheme='teal'
-						isLoading={isSubmitting}
-						type='submit'>
-						Submit
-					</Button>
+						<Button colorScheme='teal' isLoading={isSubmitting} type='submit'>
+							Submit
+						</Button>
+					</div>
 				</FormControl>
 			</form>
 		</Flex>
