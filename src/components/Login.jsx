@@ -88,6 +88,7 @@ const Login = () => {
 									id='email'
 									type='email'
 									placeholder='Email'
+									autoComplete='email'
 									{...register('email', { required: 'This is required' })}
 								/>
 							</InputGroup>
@@ -104,6 +105,7 @@ const Login = () => {
 									id='password'
 									placeholder='Password'
 									type='password'
+									autoComplete='password'
 									minLength={6}
 									{...register('password', { required: 'This is required' })}
 								/>
