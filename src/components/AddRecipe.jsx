@@ -30,7 +30,7 @@ const AddRecipe = () => {
 			name: '',
 			servings: null,
 			steps: [' '],
-			ingredients: [{ name: '', price: null }],
+			ingredients: [{ name: '', price: null, measurement: '', amount: null }],
 			description: '',
 		},
 	});
@@ -161,6 +161,20 @@ const AddRecipe = () => {
 								placeholder={`ingredient ${index + 1} price`}
 								{...register(`ingredients[${index}].price`, {
 									setValueAs: (v) => parseInt(v),
+								})}
+							/>
+							<Input
+								marginBottom={2}
+								type='text'
+								placeholder={`ingredient ${index + 1} measurement(kg,gram etc)`}
+								{...register(`ingredients[${index}].measurement`)}
+							/>
+							<Input
+								marginBottom={2}
+								type='text'
+								placeholder={`ingredient ${index + 1} amount`}
+								{...register(`ingredients[${index}].amount`, {
+									setValueAs: (v) => parseFloat(v),
 								})}
 							/>
 							<Button marginBottom={2} onClick={() => ingredientRemove(index)}>
