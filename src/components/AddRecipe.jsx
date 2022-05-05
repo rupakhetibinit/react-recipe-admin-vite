@@ -46,6 +46,7 @@ const AddRecipe = () => {
 
 	const onSubmit = (values) => {
 		console.log(values, imageUrl);
+		if (!imageUrl) return;
 		axios
 			.post(
 				'https://recipetohome-api.herokuapp.com/api/v1/recipes',
