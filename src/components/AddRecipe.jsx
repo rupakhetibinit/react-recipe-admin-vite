@@ -153,6 +153,20 @@ const AddRecipe = () => {
 						<div key={item.id}>
 							<Input
 								marginBottom={2}
+								type='text'
+								placeholder={`ingredient ${index + 1} amount`}
+								{...register(`ingredients[${index}].amount`, {
+									setValueAs: (v) => parseFloat(v),
+								})}
+							/>
+							<Input
+								marginBottom={2}
+								type='text'
+								placeholder={`ingredient ${index + 1} measurement(kg,gram etc)`}
+								{...register(`ingredients[${index}].measurement`)}
+							/>
+							<Input
+								marginBottom={2}
 								placeholder={`ingredient ${index + 1} name`}
 								{...register(`ingredients[${index}].name`)}
 							/>
@@ -164,20 +178,7 @@ const AddRecipe = () => {
 									setValueAs: (v) => parseInt(v),
 								})}
 							/>
-							<Input
-								marginBottom={2}
-								type='text'
-								placeholder={`ingredient ${index + 1} measurement(kg,gram etc)`}
-								{...register(`ingredients[${index}].measurement`)}
-							/>
-							<Input
-								marginBottom={2}
-								type='text'
-								placeholder={`ingredient ${index + 1} amount`}
-								{...register(`ingredients[${index}].amount`, {
-									setValueAs: (v) => parseFloat(v),
-								})}
-							/>
+
 							<Button marginBottom={2} onClick={() => ingredientRemove(index)}>
 								Remove Ingredient
 							</Button>
