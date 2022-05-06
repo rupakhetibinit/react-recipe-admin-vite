@@ -7,6 +7,7 @@ import {
 	Heading,
 	Image,
 	Input,
+	Text,
 } from '@chakra-ui/react';
 import React, { useContext, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -30,7 +31,9 @@ const AddRecipe = () => {
 			name: '',
 			servings: null,
 			steps: [' '],
-			ingredients: [{ name: '', price: null, measurement: '', amount: null }],
+			ingredients: [
+				{ name: '', price: null, measurement: '', amount: null, required: '' },
+			],
 			description: '',
 		},
 	});
@@ -154,11 +157,20 @@ const AddRecipe = () => {
 							<Input
 								marginBottom={2}
 								type='text'
-								placeholder={`ingredient ${index + 1} amount`}
-								{...register(`ingredients[${index}].amount`, {
-									setValueAs: (v) => parseFloat(v),
-								})}
+								placeholder={`ingredient ${index + 1} quantity`}
+								{...register(`ingredients[${index}].required`)}
 							/>
+							<Text>Orderable Amounts</Text>
+							<div>
+								<Input
+									marginBottom={2}
+									type='text'
+									placeholder={`ingredient ${index + 1} amount`}
+									{...register(`ingredients[${index}].amount`, {
+										setValueAs: (v) => parseFloat(v),
+									})}
+								/>
+							</div>
 							<Input
 								marginBottom={2}
 								type='text'
