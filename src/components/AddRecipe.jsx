@@ -66,6 +66,7 @@ const AddRecipe = () => {
 				if (res.statusText === 'OK') {
 					console.log('success');
 					reset();
+					setImageUrl('');
 				} else {
 					console.log('failed');
 				}
