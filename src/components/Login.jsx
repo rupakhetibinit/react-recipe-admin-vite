@@ -69,7 +69,7 @@ const Login = () => {
 	return (
 		<Center h='100vh' bg='purple.200'>
 			<Stack boxShadow='md' bg='whiteAlpha.900' p='20' rounded='md'>
-				<Image src='images' maxW='70px' mx='auto' mb='8' alt='Burger Logo' />
+				{/* <Image src='images' maxW='70px' mx='auto' mb='8' alt='Burger Logo' /> */}
 				<Heading as='h3'>Admin Panel Login</Heading>
 				<Text fontSize='md' color='gray.600'>
 					Please login using email and password
